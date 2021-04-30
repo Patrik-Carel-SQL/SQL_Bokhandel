@@ -1,20 +1,17 @@
-const express = require("express")
-const sql = require("mssql")
+const express = require('express');
+const sql = require('mssql');
 
-require("dotenv").config()
+require('dotenv').config();
 
-const app = express()
+const app = express();
 
 app.set('view engine', 'pug');
 app.locals.pretty = true;
 
-
-
 app.get('/', async (req, res) => {
-
-  try {
-  // Setup select from SQL server
-    const query=`
+	try {
+		// Setup select from SQL server
+		const query = `
       select
         ISBN13 as 'ISBN',
         Titel,
@@ -31,14 +28,12 @@ app.get('/', async (req, res) => {
     //console.log(query)
     
     res.render('bocker.pug', {bocker: result.recordset})
-  }
 
-  catch (ex){
-    console.log(ex)
-  }
-})
-
+	} catch (ex) {
+		console.log(ex);
+	}
+});
 
 app.listen(3000, () => {
-  console.log("Server is now online with port 3000.")
-})
+	console.log('Server is now online with port 3000.');
+});
