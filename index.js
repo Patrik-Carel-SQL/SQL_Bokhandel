@@ -36,24 +36,29 @@ app.get('/', async (req, res) => {
 
 //Gets the ISBN code and book details
 app.get('/book/:ISBN', async (req, res) => {
+	const connection = await sql.connect(process.env.CONNECTION);
 	const ISBN = req.params.ISBN;
-
 	const title = `
-      select Titel from dbo.Böcker where ISBN13 = "%" + @ISBN + "%"
-  `;
-  const connection = await sql.connect(process.env.CONNECTION)
-  const result = await connection.request()
-    .input('ISBN', sql.BigInt, req.ISBN)
-    .query(query)
-  console.log(query)
+	select Titel from dbo.Böcker where ISBN13 = @ISBN
+  select Pris from dbo.Böcker where ISBN13 = @ISBN
+  select Utgivningsdatum from dbo.Böcker where ISBN13 = @ISBN
+  SELECT  
+    Förnamn + ' ' + Efternamn as 'Name', ID
+  FROM dbo.Författare as FF
+    JOIN Böcker as B on FF.ID = B.FörfattareID
+    WHERE B.ISBN13 =  @ISBN
+	`;
+	const result = await connection.request().input('ISBN', sql.BigInt, ISBN).query(title);
+	console.log(result.recordsets[3][0].Name);
 
+	//Fethces book details from a specific ISBN13 number
 	res.render('book.pug', {
-		title: result.Titel,
-		//author: authorSQL,
-		//price: priceSQL,
-		//publishDate: publishDateSQL,
+		title: result.recordset[0].Titel,
+		price: result.recordsets[1][0].Pris + ' ' + 'kr',
+		publishDate: new Date(result.recordsets[2][0].Utgivningsdatum),
+		author: result.recordsets[3][0].Name,
+		ISBN13: ISBN,
 	});
-	res.send(ISBN);
 });
 
 app.listen(3000, () => {
