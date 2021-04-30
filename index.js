@@ -33,19 +33,21 @@ app.get('/', async (req, res) => {
 });
 
 //Gets the ISBN code and book details
-app.get('/book/:ISBN', (req, res) => {
+app.get('/book/:ISBN', async (req, res) => {
+	const connection = await sql.connect(process.env.CONNECTION);
 	const ISBN = req.params.ISBN;
-
 	const title = `
-      select Titel from dbo.Böcker where ISBN13 = "%" + @ISBN + "%"
-  `;
+	select Titel from dbo.Böcker where ISBN13 = @ISBN 
+	`;
+	const result = await connection.request().input('ISBN', sql.BigInt, ISBN).query(title);
+	console.log(result);
 	res.render('book.pug', {
-		title: title,
+		title: result.recordset[0].Titel,
 		//author: authorSQL,
 		//price: priceSQL,
 		//publishDate: publishDateSQL,
 	});
-	res.send(ISBN);
+	//res.send(ISBN);
 });
 
 app.listen(3000, () => {
