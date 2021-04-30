@@ -28,7 +28,7 @@ app.get('/', async (req, res) => {
     const connection = await sql.connect(process.env.CONNECTION)
     const result = await connection.request()
       .query(query)
-    console.log(query)
+    //console.log(query)
     
     res.render('bocker.pug', {bocker: result.recordset})
   }
