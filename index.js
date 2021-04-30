@@ -32,6 +32,22 @@ app.get('/', async (req, res) => {
 	}
 });
 
+//Gets the ISBN code and book details
+app.get('/book/:ISBN', (req, res) => {
+	const ISBN = req.params.ISBN;
+
+	const title = `
+      select Titel from dbo.Böcker where ISBN13 = "%" + @ISBN + "%"
+  `;
+	res.render('book.pug', {
+		title: title,
+		//author: authorSQL,
+		//price: priceSQL,
+		//publishDate: publishDateSQL,
+	});
+	res.send(ISBN);
+});
+
 app.listen(3000, () => {
 	console.log('Server is now online with port 3000.');
 });
