@@ -17,5 +17,8 @@ html
       tbody 
         each bok in bocker 
           tr 
+            //-This is working link with ISBN number with /, but issue is the link is outside the table 
+            a(href="/" + bok.ISBN) 
+
             each value in bok
               td= value
