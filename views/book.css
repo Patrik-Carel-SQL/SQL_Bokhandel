@@ -1,0 +1,47 @@
+img {
+	margin: 0 auto;
+}
+
+.container {
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+	gap: 1rem;
+}
+#Title {
+	margin-top: 1vw;
+}
+
+#price {
+	color: red;
+	font-size: 40px;
+	font-weight: 700;
+	margin-top: 10px;
+}
+
+#publishDate {
+	font-size: 20px;
+	margin-top: -10px;
+}
+
+#author {
+	margin: 0;
+}
+
+button {
+	border: none;
+	border-radius: 10px;
+	padding: 10px;
+	width: 10vw;
+}
+
+i {
+	font-size: 5vw;
+	position: absolute;
+	left: 1vw;
+	top: 1vw;
+}
+
+a {
+	text-decoration: none;
+}
