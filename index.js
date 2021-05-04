@@ -40,16 +40,19 @@ app.get('/book/:ISBN', async (req, res) => {
 	const ISBN = req.params.ISBN;
 	const title = `
 	select Titel from dbo.Böcker where ISBN13 = @ISBN
-  select Pris from dbo.Böcker where ISBN13 = @ISBN
-  select Utgivningsdatum from dbo.Böcker where ISBN13 = @ISBN
-  SELECT  
+  	select Pris from dbo.Böcker where ISBN13 = @ISBN
+  	select Utgivningsdatum from dbo.Böcker where ISBN13 = @ISBN
+  	SELECT  
     Förnamn + ' ' + Efternamn as 'Name', ID
-  FROM dbo.Författare as FF
+  	FROM dbo.Författare as FF
     JOIN Böcker as B on FF.ID = B.FörfattareID
     WHERE B.ISBN13 =  @ISBN
+
+	SELECT ButikID FROM dbo.LagerSaldo WHERE ISBN = @ISBN
+	SELECT Antal FROM dbo.LagerSaldo WHERE ISBN = @ISBN
 	`;
 	const result = await connection.request().input('ISBN', sql.BigInt, ISBN).query(title);
-	console.log(result.recordsets[3][0].Name);
+	console.log(result.recordsets[4][0].ButikID);
 
 	//Fethces book details from a specific ISBN13 number
 	res.render('book.pug', {
@@ -57,6 +60,8 @@ app.get('/book/:ISBN', async (req, res) => {
 		price: result.recordsets[1][0].Pris + ' ' + 'kr',
 		publishDate: new Date(result.recordsets[2][0].Utgivningsdatum),
 		author: result.recordsets[3][0].Name,
+		butikID: result.recordsets[4][0].ButikID,
+		antal: result.recordsets[5][0].Antal,
 		ISBN13: ISBN,
 	});
 });
