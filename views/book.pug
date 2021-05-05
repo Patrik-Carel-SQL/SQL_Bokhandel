@@ -14,38 +14,49 @@ html
             img(src="https://image.bokus.com/images/" + ISBN13)
             h2#author=author
             h3#publishDate=publishDate
+            //- h6#sidor Antal sidor: 
+            //-      span=sidor 
             h4#price=price
+
+               
 
         div.saldo
             h1 Lagersaldo:
-            br
-
-            if butikID === 10
-                h4 Akademibokhandeln 
-                h4#antal=antal
-                br
-                h4 Din Bok: 
-                h4 Ej i lager.
-                br
-                h4 Bokhandeln Aniara: 
-                h4 Ej i lager.
-            else if butikID === 11
-                h4 Akademibokhandeln: 
-                h4 Ej i lager.
-                br
-                h4=butikID.Butiksnamn 
-                h4#antal=antal
-                br
-                h4 Bokhandeln Aniara: 
-                h4 Ej i lager.
-            else if butikID === 12
-                h4 Akademibokhandeln: 
-                h4 Ej i lager.
-                br
-                h4 Din Bok: 
-                h4 Ej i lager.
-                br
-                h4 Bokhandeln Aniara: 
-                h4#antal=antal 
+            //- h2#HeaderButik=butikNamn
+            //- h2#ButikID=butiksID
+            Br
+            each butik in butikNamn
+                tr=butik.Butiksnamn 
+            //- if butiksID === 10
+            //-     h4 Akademibokhandeln: 
+            //-     h4#antal=antalLager 
+            //-     br
+            //-     h4 Din Bok: 
+            //-     h4 Ej i lager.
+            //-     br
+            //-     h4 Bokhandeln Aniara: 
+            //-     h4 Ej i lager.
+            //- else if butiksID === 11
+            //-     h4 Akademibokhandeln: 
+            //-     h4 Ej i lager.
+            //-     br
+            //-     h4 Din Bok: 
+            //-     h4#antal=antalLager 
+            //-     br
+            //-     h4 Bokhandeln Aniara: 
+            //-     h4 Ej i lager.
+            //- else if butiksID === 12
+            //-     h4 Akademibokhandeln: 
+            //-     h4 Ej i lager.
+            //-     br
+            //-     h4 Din Bok: 
+            //-     h4 Ej i lager.
+            //-     br
+            //-     h4 Bokhandeln Aniara: 
+            //-     h4#antal=antalLager
+            //- else
+            //-     h5 TEST
+                 
+            
 
     script(src="https://kit.fontawesome.com/ad7e5bb9d9.js" crossorigin="anonymous")

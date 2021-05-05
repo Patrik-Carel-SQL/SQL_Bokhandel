@@ -12,12 +12,12 @@ app.get('/', async (req, res) => {
 	try {
 		// Setup select from SQL server
 		const query = `
-      select
+      SELECT
         ISBN13 as 'ISBN',
         Titel,
         FF.Förnamn + ' ' + FF.Efternamn as 'Name',
         Pris
-      from
+      FROM
         Böcker as B
       join Författare as FF on B.FörfattareID = FF.ID
     `
@@ -26,7 +26,7 @@ app.get('/', async (req, res) => {
     const result = await connection.request()
       .query(query)
     //console.log(query)
-    
+    // console.log(result)
     res.render('bocker.pug', {bocker: result.recordset})
 
 	} catch (ex) {
@@ -38,36 +38,53 @@ app.get('/', async (req, res) => {
 app.get('/book/:ISBN', async (req, res) => {
 	const connection = await sql.connect(process.env.CONNECTION);
 	const ISBN = req.params.ISBN;
-	const title = `
-	select Titel from dbo.Böcker where ISBN13 = @ISBN
-  	select Pris from dbo.Böcker where ISBN13 = @ISBN
-  	select Utgivningsdatum from dbo.Böcker where ISBN13 = @ISBN
-  	SELECT  
-    Förnamn + ' ' + Efternamn as 'Name', ID
-  	FROM dbo.Författare as FF
-    JOIN Böcker as B on FF.ID = B.FörfattareID
-    WHERE B.ISBN13 =  @ISBN
+	const data = `
+	/*Select specifie book by ISBN*/ 
+  SELECT  
+		Titel,
+		Pris,
+		Utgivningsdatum,
+    FF.Förnamn + ' ' + FF.Efternamn as 'Name', ID
+  FROM 
+		dbo.Böcker as B
+  JOIN Författare as FF on B.FörfattareID = FF.ID
+  WHERE 
+		B.ISBN13 =  @ISBN
 
-
-	SELECT
-		LS.ButikID, LS.Antal
-		from dbo.LagerSaldo as LS
-		JOIN Butiker as BB on LS.ButikID = BB.ButikID
-		WHERE LS.ISBN = @ISBN
+	/*Select Shops*/
+	SELECT Butiksnamn, ButikID from dbo.Butiker
+	SELECT ButikID, Antal FROM dbo.LagerSaldo WHERE ISBN = @ISBN
 	`;
-	const result = await connection.request().input('ISBN', sql.BigInt, ISBN).query(title);
-	console.log(result.recordsets[4][0].ButikID);
+	const result = await connection.request().input('ISBN', sql.BigInt, ISBN).query(data);
 
+	resultBok = result.recordset[0]
+	resultButik = result.recordsets[1]
 	//Fethces book details from a specific ISBN13 number
 	res.render('book.pug', {
-		title: result.recordset[0].Titel,
-		price: result.recordsets[1][0].Pris + ' ' + 'kr',
-		publishDate: new Date(result.recordsets[2][0].Utgivningsdatum),
-		author: result.recordsets[3][0].Name,
-		butikID: result.recordsets[4][0].ButikID,
-		antal: result.recordsets[5][0].Antal,
+		// För Boken
+		title: resultBok.Titel,
+		price: resultBok.Pris + ' ' + 'kr',
+		publishDate: new Date(resultBok.Utgivningsdatum),
+		author: resultBok.Name,
+		// sidor: result.recordsets[4][0].Sidor,
+
+		// För Butiker
+		butikNamn: resultButik.Butiksnamn,
+		butiksID: resultButik.butikID,
+		// antalLager: resultButik.Antal,
+		// butikISBN: resultButik.ISBN,
 		ISBN13: ISBN,
 	});
+	// console.log(result.recordsets[1][0]);
+	// console.log(result.recordsets[1][1])
+	// console.log(result.recordsets[1])
+	console.log(resultButik[0].Butiksnamn)
+	console.log(resultButik[1].Butiksnamn)
+	console.log(resultButik[2].Butiksnamn)
+	console.log(resultButik.Butiksnamn)
+	// console.log(result.recordsets[1])
+	// console.log(resultButik)
+	// console.log(resultButik.Butiksnamn)
 });
 
 app.listen(3000, () => {
