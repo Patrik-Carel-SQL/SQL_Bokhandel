@@ -50,14 +50,18 @@ app.get('/book/:ISBN', async (req, res) => {
 		B.ISBN13 =  @ISBN
 
 	/*Select Shops*/
-SELECT BB.ButikID, Antal, ISBN, BB.Butiksnamn FROM dbo.LagerSaldo as LS 
-	JOIN Butiker as BB on BB.ButikID = LS.ButikID
+
+	SELECT ButikID, Butiksnamn FROM dbo.Butiker
+	
+	SELECT ButikID, Antal, ISBN FROM dbo.LagerSaldo
+
 	
 	`;
 	const result = await connection.request().input('ISBN', sql.BigInt, ISBN).query(data);
 
 	resultBok = result.recordset[0];
 	resultButik = result.recordsets[1];
+	resultLager = result.recordsets[2]
 	//Fethces book details from a specific ISBN13 number
 	res.render('book.pug', {
 		// För Boken
@@ -68,15 +72,16 @@ SELECT BB.ButikID, Antal, ISBN, BB.Butiksnamn FROM dbo.LagerSaldo as LS
 		// sidor: result.recordsets[4][0].Sidor,
 
 		// För Butiker
-		butikNamn: resultButik,
-		butiksID: resultButik.butikID,
-		// antalLager: resultButik.Antal,
-		// butikISBN: resultButik.ISBN,
+		butikList: resultButik,
+		butikLager: resultLager,
 		ISBN13: ISBN,
 	});
 	// console.log(result.recordsets[1][0]);
 	// console.log(result.recordsets[1][1])
-	console.log(result.recordsets);
+	console.log(result.recordsets[2]);
+	console.log(resultLager[0].Antal)
+	console.log(resultButik)
+	console.log(result.recordsets[2].Antal)
 	//console.log(resultButik[0].Butiksnamn)
 	//console.log(resultButik[1].Butiksnamn)
 	//console.log(resultButik[2].Butiksnamn)
