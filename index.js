@@ -50,7 +50,8 @@ app.get('/book/:ISBN', async (req, res) => {
 		B.ISBN13 =  @ISBN
 
 	/*Select Shops*/
-SELECT BB.ButikID, Antal, ISBN, BB.Butiksnamn FROM dbo.LagerSaldo as LS 
+	SELECT ButikID, Butiksnamn FROM 
+	SELECT BB.ButikID, Antal, ISBN, BB.Butiksnamn FROM dbo.LagerSaldo as LS
 	JOIN Butiker as BB on BB.ButikID = LS.ButikID
 	
 	`;
