@@ -48,8 +48,12 @@ app.get('/book/:ISBN', async (req, res) => {
     JOIN Böcker as B on FF.ID = B.FörfattareID
     WHERE B.ISBN13 =  @ISBN
 
-	SELECT ButikID FROM dbo.LagerSaldo WHERE ISBN = @ISBN
-	SELECT Antal FROM dbo.LagerSaldo WHERE ISBN = @ISBN
+
+	SELECT
+		LS.ButikID, LS.Antal
+		from dbo.LagerSaldo as LS
+		JOIN Butiker as BB on LS.ButikID = BB.ButikID
+		WHERE LS.ISBN = @ISBN
 	`;
 	const result = await connection.request().input('ISBN', sql.BigInt, ISBN).query(title);
 	console.log(result.recordsets[4][0].ButikID);
