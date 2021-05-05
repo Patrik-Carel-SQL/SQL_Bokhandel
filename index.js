@@ -20,15 +20,13 @@ app.get('/', async (req, res) => {
       FROM
         Böcker as B
       join Författare as FF on B.FörfattareID = FF.ID
-    `
-    
-    const connection = await sql.connect(process.env.CONNECTION)
-    const result = await connection.request()
-      .query(query)
-    //console.log(query)
-    // console.log(result)
-    res.render('bocker.pug', {bocker: result.recordset})
+    `;
 
+		const connection = await sql.connect(process.env.CONNECTION);
+		const result = await connection.request().query(query);
+		//console.log(query)
+		// console.log(result)
+		res.render('bocker.pug', { bocker: result.recordset });
 	} catch (ex) {
 		console.log(ex);
 	}
@@ -52,13 +50,14 @@ app.get('/book/:ISBN', async (req, res) => {
 		B.ISBN13 =  @ISBN
 
 	/*Select Shops*/
-	SELECT Butiksnamn, ButikID from dbo.Butiker
-	SELECT ButikID, Antal FROM dbo.LagerSaldo WHERE ISBN = @ISBN
+SELECT BB.ButikID, Antal, ISBN, BB.Butiksnamn FROM dbo.LagerSaldo as LS 
+	JOIN Butiker as BB on BB.ButikID = LS.ButikID
+	
 	`;
 	const result = await connection.request().input('ISBN', sql.BigInt, ISBN).query(data);
 
-	resultBok = result.recordset[0]
-	resultButik = result.recordsets[1]
+	resultBok = result.recordset[0];
+	resultButik = result.recordsets[1];
 	//Fethces book details from a specific ISBN13 number
 	res.render('book.pug', {
 		// För Boken
@@ -69,7 +68,7 @@ app.get('/book/:ISBN', async (req, res) => {
 		// sidor: result.recordsets[4][0].Sidor,
 
 		// För Butiker
-		butikNamn: resultButik.Butiksnamn,
+		butikNamn: resultButik,
 		butiksID: resultButik.butikID,
 		// antalLager: resultButik.Antal,
 		// butikISBN: resultButik.ISBN,
@@ -77,11 +76,11 @@ app.get('/book/:ISBN', async (req, res) => {
 	});
 	// console.log(result.recordsets[1][0]);
 	// console.log(result.recordsets[1][1])
-	// console.log(result.recordsets[1])
-	console.log(resultButik[0].Butiksnamn)
-	console.log(resultButik[1].Butiksnamn)
-	console.log(resultButik[2].Butiksnamn)
-	console.log(resultButik.Butiksnamn)
+	console.log(result.recordsets);
+	//console.log(resultButik[0].Butiksnamn)
+	//console.log(resultButik[1].Butiksnamn)
+	//console.log(resultButik[2].Butiksnamn)
+	//console.log(resultButik.Butiksnamn)
 	// console.log(result.recordsets[1])
 	// console.log(resultButik)
 	// console.log(resultButik.Butiksnamn)
