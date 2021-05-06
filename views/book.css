@@ -8,6 +8,11 @@ img {
 	text-align: center;
 	gap: 1rem;
 }
+
+.Butiker {
+	float: left;
+	margin: 20px;
+}
 #Title {
 	margin-top: 1vw;
 }
