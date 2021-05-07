@@ -22,59 +22,16 @@ html
 
         div.saldo
             h2 Lagersaldo:
-
-            each butik in butikList 
+            each butik in butikLager  
                 div.Butiker
                     h3=butik.Butiksnamn + ": "
-                    each Lager in butikLager
-                        if Lager.ButikID === butik.ButikID
-                            if Lager.ISBN === ISBN13
-                                if Lager.Antal > 0
-                                    h4#Lager=Lager.Antal
-                                    -break
-                            else if Lager.ISBN === ISBN13 
-                                h4 Searching..
-                                -continue
-                            else 
-                                h4 ERROR
-                                h4=Lager.ISBN 
-                                -break
+                    if butik.Antal > 0
+                        h4#Lager=butik.Antal 
+                    else 
+                        h4#Lager Ej lager
 
 
-
-
-
-                    //- h3=butik.Butiksnamn + ": "
-                    //- each Lager in butikLager
-                    //-     if Lager.ButikID === butik.ButikID
-                    //-         if Lager.ISBN === ISBN13
-                    //-             if Lager.Antal > 0
-                    //-                 h4#Lager=Lager.Antal
-                    //-                 -break 
-                    //-         else 
-                    //-          h4 HEJ 
-                    //-          -break
-
-
-
-
-                    //- if butik.butikID === bLager.ISBN === ISBN13
-                    //-         if Lager.Antal > 1
-                    //-             h3#Lager=Lager.Antal
-                    //-         if Lager.Antal === 0
-                    //-             h3#Lager Inte lager 
-                        
-
-                        
-
-
-                        //- if Lager.Antal > 0 && Lager.ISBN === ISBN13
-                        //-     h3#Lager=Lager.Antal
-                        //- else
-                        //-     h3#Lager Inte Lager
-
-                 
-
+            
                  
             
 

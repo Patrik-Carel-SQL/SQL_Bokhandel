@@ -15,7 +15,7 @@ app.get('/', async (req, res) => {
       SELECT
         ISBN13 as 'ISBN',
         Titel,
-        FF.Förnamn + ' ' + FF.Efternamn as 'Name',
+        FF.Förnamn + ' ' + FF.Efternamn as 'Författare',
         Pris
       FROM
         Böcker as B
@@ -53,7 +53,12 @@ app.get('/book/:ISBN', async (req, res) => {
 
 	SELECT ButikID, Butiksnamn FROM dbo.Butiker
 	
-	SELECT ButikID, Antal, ISBN FROM dbo.LagerSaldo
+	SELECT 
+		ButikID, 
+		Butiksnamn,
+		isNULL(( select Antal from LagerSaldo where ButikID = Butiker.ButikID and ISBN = @ISBN),0) as 'Antal'
+	FROM 
+		dbo.Butiker
 
 	
 	`;
@@ -78,17 +83,11 @@ app.get('/book/:ISBN', async (req, res) => {
 	});
 	// console.log(result.recordsets[1][0]);
 	// console.log(result.recordsets[1][1])
-	console.log(result.recordsets[2]);
-	console.log(resultLager[0].Antal)
-	console.log(resultButik)
-	console.log(result.recordsets[2].Antal)
-	//console.log(resultButik[0].Butiksnamn)
-	//console.log(resultButik[1].Butiksnamn)
-	//console.log(resultButik[2].Butiksnamn)
-	//console.log(resultButik.Butiksnamn)
-	// console.log(result.recordsets[1])
-	// console.log(resultButik)
-	// console.log(resultButik.Butiksnamn)
+	// console.log(result.recordsets[2]);
+	// console.log(resultLager[0].Antal)
+	console.log(resultLager)
+	// console.log(result.recordsets[2].Antal)
+
 });
 
 app.listen(3000, () => {
