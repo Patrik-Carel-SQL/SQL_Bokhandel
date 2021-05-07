@@ -42,6 +42,7 @@ app.get('/book/:ISBN', async (req, res) => {
 		Titel,
 		Pris,
 		Utgivningsdatum,
+		Sidor,
     FF.Förnamn + ' ' + FF.Efternamn as 'Name', ID
   FROM 
 		dbo.Böcker as B
@@ -66,7 +67,8 @@ app.get('/book/:ISBN', async (req, res) => {
 
 	resultBok = result.recordset[0];
 	resultButik = result.recordsets[1];
-	resultLager = result.recordsets[2]
+	resultLager = result.recordsets[2];
+
 	//Fethces book details from a specific ISBN13 number
 	res.render('book.pug', {
 		// För Boken
@@ -74,7 +76,7 @@ app.get('/book/:ISBN', async (req, res) => {
 		price: resultBok.Pris + ' ' + 'kr',
 		publishDate: new Date(resultBok.Utgivningsdatum),
 		author: resultBok.Name,
-		// sidor: result.recordsets[4][0].Sidor,
+		sidor: resultBok.Sidor,
 
 		// För Butiker
 		butikList: resultButik,
@@ -82,12 +84,11 @@ app.get('/book/:ISBN', async (req, res) => {
 		ISBN13: ISBN,
 	});
 	// console.log(result.recordsets[1][0]);
-	// console.log(result.recordsets[1][1])
+	console.log(result.recordsets);
 	// console.log(result.recordsets[2]);
 	// console.log(resultLager[0].Antal)
-	console.log(resultLager)
+	console.log(result.recordsets);
 	// console.log(result.recordsets[2].Antal)
-
 });
 
 app.listen(3000, () => {
